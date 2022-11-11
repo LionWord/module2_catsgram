@@ -18,6 +18,7 @@ public class SimpleController {
     @GetMapping("/do-hack")
     public void doHack(){
         // хакните этих котиков
+        hackCatService.doHackNow();
     }
 
     @GetMapping("/home")
