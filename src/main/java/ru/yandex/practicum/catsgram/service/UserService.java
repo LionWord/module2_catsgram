@@ -1,16 +1,16 @@
 package ru.yandex.practicum.catsgram.service;
 
 import org.springframework.stereotype.Service;
-import ru.yandex.practicum.catsgram.DAO.UserDAO;
+import ru.yandex.practicum.catsgram.dao.UserDao;
 import ru.yandex.practicum.catsgram.model.User;
 
 import java.util.Optional;
 
 @Service
 public class UserService {
-    private final UserDAO userDao;
+    private final UserDao userDao;
 
-    public UserService(UserDAO userDao) {
+    public UserService(UserDao userDao) {
         this.userDao = userDao;
     }
 

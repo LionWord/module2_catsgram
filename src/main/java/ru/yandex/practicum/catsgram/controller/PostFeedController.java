@@ -10,7 +10,9 @@ import ru.yandex.practicum.catsgram.model.Post;
 import ru.yandex.practicum.catsgram.service.PostService;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static ru.yandex.practicum.catsgram.Constants.SORTS;
 
@@ -25,21 +27,17 @@ public class PostFeedController {
     }
 
     @PostMapping
-    List<Post> getFriendsFeed(@RequestBody FeedParams feedParams) {
-        if (!SORTS.contains(feedParams.getSort())) {
-            throw new IncorrectParameterException("sort");
-        }
-        if (feedParams.getSize() == null || feedParams.getSize() <= 0) {
-            throw new IncorrectParameterException("size");
-        }
-        if (feedParams.getFriendsEmails().isEmpty()) {
-            throw new IncorrectParameterException("friendsEmails");
-        }
-
-        List<Post> result = new ArrayList<>();
-        for (String friendEmail : feedParams.getFriendsEmails()) {
-            result.addAll(postService.findAllByUserEmail(friendEmail, feedParams.getSize(), feedParams.getSort()));
-        }
-        return result;
+    public Collection<Post> findPostsByUser(String authorId, Integer size, String sort) {
+        return findPostsByUser(authorId, size, sort)
+                .stream()
+                .sorted((p0, p1) -> {
+                    int comp = p0.getCreationDate().compareTo(p1.getCreationDate()); //прямой порядок сортировки
+                    if (sort.equals("desc")) {
+                        comp = -1 * comp; //обратный порядок сортировки
+                    }
+                    return comp;
+                })
+                .limit(size)
+                .collect(Collectors.toList());
     }
 }
